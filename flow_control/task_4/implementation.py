@@ -1,6 +1,3 @@
-from datetime import datetime, date
-
-
 def get_next_date(some_date):
     """Возвращает следующую дату для заданной
 
