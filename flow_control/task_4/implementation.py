@@ -9,30 +9,19 @@ def get_next_date(some_date):
 
     Returns: следующая дата
     """
-    date_ = {
-        'y': some_date.year,
-        'm': some_date.month,
-        'd': some_date.day
-    }
     
-    if is_last_day_in_month(date_['d'], date_['m'], date_['y']):
-        if date_['m'] == 12:
-            date_['y'] = date_['y'] + 1
-            date_['m'] = 1
+    if is_last_day_in_month(some_date.day, some_date.month, some_date.year):
+        if some_date.month == 12:
+            result_date = some_date.replace(year=some_date.year + 1, month=1, day=1)
         else:
-            date_['m'] = date_['m'] + 1
-        date_['d'] = 1
+            result_date = some_date.replace(month=some_date.month + 1, day=1)
     else:
-        date_['d'] = date_['d'] + 1
+        result_date = some_date.replace(day=some_date.day + 1)
 
-    return date(year=date_['y'], month=date_['m'], day=date_['d'])
+    return result_date
 
 
 def is_last_day_in_month(day, month, year):
-    if day == 31 and month in [1, 3, 5, 7, 8, 10, 12]:
-        return True
-    if day == 30 and month in [4, 6, 9, 11]:
-        return True
-    if month == 2 and (day == 29 or (day == 28 and year % 4 != 0)):
-        return True
-    return False
+    return any([day == 31 and month in [1, 3, 5, 7, 8, 10, 12],
+                day == 30 and month in [4, 6, 9, 11],
+                month == 2 and (day == 29 or (day == 28 and year % 4 != 0))])

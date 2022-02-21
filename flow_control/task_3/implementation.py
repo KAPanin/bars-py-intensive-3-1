@@ -9,14 +9,15 @@ def get_days_count_by_month(month):
 
     Returns: количество дней
     """
+    count_day = 0
     if month in ['январь', 'март', 'май', 'июль', 'август', 'октябрь', 'декабрь']:
-        return 31
+        count_day = 31
     elif month in ['апрель', 'июнь', 'сентябрь', 'ноябрь']:
-        return 30
+        count_day = 30
     elif month == 'февраль':
         if datetime.now().year % 4 == 0:
-            return 29
+            count_day = 29
         else:
-            return 28
-    else:
-        return 0
+            count_day = 28
+
+    return count_day
