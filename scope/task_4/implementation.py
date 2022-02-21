@@ -1,6 +1,6 @@
 def bad_open(file_path, mode):
     """Некорректная функция открытия файла"""
-    raise Exception
+    return open(file_path, mode)
 
 
 def open_and_close_file(file_path):
