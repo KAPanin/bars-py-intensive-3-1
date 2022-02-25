@@ -7,7 +7,7 @@ class ClassFather:
     @classmethod
     def get_name(cls):
         if cls != ClassFather and cls in ClassFather.registered_list:
-            return cls()._name
+            return cls._name
 
         raise MyException
 
