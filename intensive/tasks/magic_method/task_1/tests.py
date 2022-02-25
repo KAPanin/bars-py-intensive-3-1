@@ -1,6 +1,6 @@
 import unittest
 
-from tasks.magic_method.task_1.implementation import (
+from intensive.tasks.magic_method.task_1.implementation import (
     Hundred,
     Thousand,
     Million,

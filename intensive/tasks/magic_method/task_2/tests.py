@@ -1,6 +1,6 @@
 import unittest
 
-from tasks.magic_method.task_2.implementation import (
+from intensive.tasks.magic_method.task_2.implementation import (
     MathClock
 )
 

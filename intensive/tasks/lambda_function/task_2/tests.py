@@ -1,6 +1,6 @@
 import unittest
 
-from tasks.lambda_function.task_2.implementation import (
+from intensive.tasks.lambda_function.task_2.implementation import (
     res_list
 )
 
