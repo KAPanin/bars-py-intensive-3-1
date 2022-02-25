@@ -26,7 +26,7 @@ def cache(func):
 
     def wrapper(*args, **kwargs):
         cache_key = args + tuple(kwargs.items())
-        if not saved_cache.get(cache_key):
+        if cache_key not in saved_cache:
             saved_cache[cache_key] = func(*args, **kwargs)
         return saved_cache[cache_key]
 
