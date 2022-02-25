@@ -1,4 +1,6 @@
 from tasks.common import MyException
+from tasks.decorators.task_1.implementation import time_execution
+from tasks.common import factorial
 
 
 def check_value(func):
@@ -29,3 +31,10 @@ def cache(func):
         return saved_cache[cache_key]
 
     return wrapper
+
+
+new_factorial = cache(factorial)
+new_factorial = time_execution(new_factorial)
+
+new_factorial(100000)  # Время выполнеия функции:  2.2102606296539307
+new_factorial(100000)  # Время выполнеия функции:  6.67572021484375e-06

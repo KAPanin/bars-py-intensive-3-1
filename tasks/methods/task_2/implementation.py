@@ -5,10 +5,7 @@ class ClassFather:
     registered_list = []
 
     def get_name(self):
-        if type(self) == ClassFather:
-            raise MyException
-
-        if self in self.registered_list:
+        if type(self) != ClassFather and self in self.registered_list:
             return self._name
         else:
             raise MyException
@@ -18,7 +15,7 @@ class ClassFather:
             raise MyException
 
         if self not in self.registered_list:
-            ClassFather.registered_list.append(self)
+            self.registered_list.append(self)
 
 
 class User1(ClassFather):
