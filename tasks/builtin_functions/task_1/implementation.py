@@ -3,7 +3,13 @@ from tasks.common import MyException
 
 class Value:
     def __init__(self, number):
-        self.number = number
+        if isinstance(number, (int, float)):
+            self.number = number
+        else:
+            try:
+                self.number = float(number)
+            except ValueError:
+                raise MyException
 
     def __add__(self, other):
         return self.number + other

@@ -8,7 +8,7 @@ def check_value(func):
     в противном случае - выбрасывает исключение MyException.
     """
     def wrapper(arg):
-        if isinstance(arg, int) and arg >= 0:
+        if type(arg) == int and arg >= 0:
             return func(arg)
         else:
             raise MyException

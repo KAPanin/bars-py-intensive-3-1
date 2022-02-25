@@ -18,7 +18,7 @@ def decorator_maker(times, delay):
             for _ in range(times):
                 try:
                     result = func(*args, **kwargs)
-                except AssertionError:
+                except:
                     pass
 
                 if result:
