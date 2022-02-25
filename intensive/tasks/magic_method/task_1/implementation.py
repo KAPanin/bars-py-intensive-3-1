@@ -3,39 +3,45 @@ class Multiplier:
         self._value = value
 
     def __add__(self, other):
-        if isinstance(other, Multiplier):
-            new_value = self._value + other._value
-        else:
-            new_value = self._value
-
-        return Multiplier(new_value)
+        return Multiplier(self._value + self.__check(other))
 
     def __sub__(self, other):
-        if isinstance(other, Multiplier):
-            new_value = self._value - other._value
-        else:
-            new_value = self._value
-
-        return Multiplier(new_value)
+        return Multiplier(self._value - self.__check(other))
 
     def __truediv__(self, other):
-        if isinstance(other, Multiplier):
-            new_value = self._value / other._value
-        else:
-            new_value = self._value
-
-        return Multiplier(new_value)
+        return Multiplier(self._value / self.__check(other))
 
     def __mul__(self, other):
-        if isinstance(other, Multiplier):
-            new_value = self._value * other._value
-        else:
-            new_value = self._value
+        return Multiplier(self._value * self.__check(other))
 
-        return Multiplier(new_value)
+    def __radd__(self, other):
+        return Multiplier(self._value + self.__check(other))
+
+    def __rsub__(self, other):
+        return Multiplier(self.__check(other) - self._value)
+
+    def __rtruediv__(self, other):
+        return Multiplier(self.__check(other) / self._value)
+
+    def __rmul__(self, other):
+        return Multiplier(self._value * self.__check(other))
 
     def get_value(self) -> int:
         return int(self._value)
+
+    @staticmethod
+    def __check(other):
+        """
+        Проверяет тип входного аргумента
+
+        Возвращает число
+        """
+        if isinstance(other, Multiplier):
+            return other._value
+        elif isinstance(other, (int, float)):
+            return other
+        else:
+            raise TypeError
 
 
 class Hundred(Multiplier):
