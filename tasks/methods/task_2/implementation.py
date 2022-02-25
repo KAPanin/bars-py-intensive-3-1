@@ -2,20 +2,20 @@ from tasks.common import MyException
 
 
 class ClassFather:
-    registered_list = []
+    registered_list = set()
 
     def get_name(self):
-        if type(self) != ClassFather and self in self.registered_list:
+        if type(self) != ClassFather and self in ClassFather.registered_list:
             return self._name
-        else:
-            raise MyException
+
+        raise MyException
 
     def register(self):
         if type(self) == ClassFather:
             raise MyException
 
-        if self not in self.registered_list:
-            self.registered_list.append(self)
+        if self not in ClassFather.registered_list:
+            ClassFather.registered_list.add(self)
 
 
 class User1(ClassFather):
