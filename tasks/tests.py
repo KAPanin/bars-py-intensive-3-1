@@ -46,7 +46,7 @@ class WorkerModelTest(TestCase):
         all_count = Worker.objects_all.all().count()
         self.assertEquals(all_count, 4)
 
-    def test_all_count_workers(self):
+    def test_active_count_workers(self):
         active_count = Worker.objects.all().count()
         self.assertEquals(active_count, 2)
 
