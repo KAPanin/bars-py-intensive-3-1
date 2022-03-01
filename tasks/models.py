@@ -19,9 +19,12 @@ class WorkerManager(models.Manager):
         Строки упорядочены по фамилии и имени сотрудника.
         Каждая строка должна быть в формате вида: Васильев Василий, 888, Подразделение №1
         """
-        workers_info = list(super().get_queryset().values_list('last_name', 'first_name', 'tab_num', 'department'))
+        workers_info = super().get_queryset().\
+            values_list('last_name', 'first_name', 'tab_num', 'department__name').\
+            order_by('last_name', 'first_name')
 
-        return ['{0} {1}, {2}, {3}'.format(*worker_info) for worker_info in workers_info]
+        return [f'{last_name} {first_name}, {tub_num}, {departament_name}'
+                for last_name, first_name, tub_num, departament_name in workers_info]
 
 
 class Department(models.Model):
