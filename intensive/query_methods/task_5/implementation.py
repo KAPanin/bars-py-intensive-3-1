@@ -15,6 +15,7 @@ def get_average_cost_without_product(product, begin, end):
 
     Returns: возвращает числовое значение средней стоимости
     """
+
     order_without_product = OrderItem.objects.values_list(
         'order_id',
         flat=True
@@ -28,14 +29,14 @@ def get_average_cost_without_product(product, begin, end):
         order__in=order_without_product
     )
 
-    join_table = order_in_date.filter(
+    order_with_price = order_in_date.filter(
         order__date_formation__range=(
             F('product__productcost__begin'),
             F('product__productcost__end')
         )
     )
 
-    order_cost = join_table.values_list(
+    order_cost = order_with_price.values_list(
         'order__number'
     ).aggregate(
         cost=Sum(F('count') * F('product__productcost__value')),

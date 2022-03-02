@@ -19,9 +19,6 @@ class ModelTest(BaseTest):
     def test_january(self):
         self.assertEqual(get_average_cost_without_product('Молоко', date(2021, 1, 1), date(2021, 1, 31)), Decimal(630))
 
-    """
-    Нет цены для даты заказа в этом промежутке и без этого товара
-    """
     def test_febraury(self):
         self.assertEqual(get_average_cost_without_product('Молоко', date(2021, 2, 1), date(2021, 2, 28)), Decimal(420))
 

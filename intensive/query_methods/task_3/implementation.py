@@ -11,16 +11,22 @@ def get_top_order_by_sum_in_period(begin, end):
 
     Returns: возвращает номер заказа и его сумму
     """
-    order_in_date = OrderItem.objects.filter(order__date_formation__range=(begin, end))
 
-    join_table = order_in_date.filter(
+    # Проверка на время заказа
+    order_in_date = OrderItem.objects.filter(
+        order__date_formation__range=(begin, end)
+    )
+
+    # Проверка на наличие цены
+    order_item_with_price = order_in_date.filter(
         order__date_formation__range=(
             F('product__productcost__begin'),
             F('product__productcost__end'),
         )
     )
 
-    max_cost = join_table.values_list(
+    # Считаем общую сумму для каждого заказа и берем заказ с наибольшей суммой
+    max_cost = order_item_with_price.values_list(
         'order__number'
     ).annotate(
         cost=Sum(F('count') * F('product__productcost__value'))
