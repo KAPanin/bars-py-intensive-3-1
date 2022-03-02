@@ -11,12 +11,17 @@ def get_top_customer_in_period(begin, end):
 
     Returns: возвращает имя покупателя и количество его заказов за указанный период
     """
-    order_in_date = Order.objects.filter(date_formation__lte=end, date_formation__gte=begin)
+    order_in_date = Order.objects.filter(date_formation__range=(begin, end))
 
-    if order_in_date.exists():
+    result_customer = order_in_date.values_list(
+        'customer__name',
+    ).annotate(
+        dcount=Count('id'),
+        min_date=Min('date_formation'),
+    ).order_by(
+        '-dcount',
+        'min_date',
+        'customer__name',
+    )
 
-        result_customer = order_in_date.values_list('customer__name').\
-            annotate(dcount=Count('customer'), min_date=Min('date_formation')).\
-            order_by('-dcount', 'min_date', 'customer__name')
-
-        return result_customer.values_list('customer__name', 'dcount')[0]
+    return result_customer.values_list('customer__name', 'dcount').first()

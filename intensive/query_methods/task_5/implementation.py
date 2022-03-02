@@ -1,5 +1,5 @@
 from ..models import *
-from django.db.models import Sum, F, Q
+from django.db.models import Sum, F, Count
 from decimal import (
     Decimal,
 )
@@ -15,23 +15,36 @@ def get_average_cost_without_product(product, begin, end):
 
     Returns: возвращает числовое значение средней стоимости
     """
-    order_in_date = OrderItem.objects.filter(order__date_formation__lte=end,
-                                             order__date_formation__gte=begin)
+    order_without_product = OrderItem.objects.values_list(
+        'order_id',
+        flat=True
+    ).filter(
+        product__name=product
+    )
 
-    result = Decimal(0)
+    order_in_date = OrderItem.objects.filter(
+        order__date_formation__range=(begin, end)
+    ).exclude(
+        order__in=order_without_product
+    )
 
-    if order_in_date.exists():
-        join_table = order_in_date.select_related('product_count'). \
-            filter(Q(order__date_formation__lte=F('product__productcost__end')) &
-                   Q(order__date_formation__gte=F('product__productcost__begin')))
+    join_table = order_in_date.filter(
+        order__date_formation__range=(
+            F('product__productcost__begin'),
+            F('product__productcost__end')
+        )
+    )
 
-        without_product = join_table.exclude(product__name=product)
+    order_cost = join_table.values_list(
+        'order__number'
+    ).aggregate(
+        cost=Sum(F('count') * F('product__productcost__value')),
+        count=Count('order__number', distinct=True)
+    )
 
-        order_cost = list(without_product.values('order__number'). \
-            annotate(cost=Sum(F('count') * F('product__productcost__value'))). \
-            values_list('cost', flat=True))
-
-        if len(order_cost) > 0:
-            result = sum(order_cost) / len(order_cost)
+    if order_cost['count']:
+        result = order_cost['cost'] / order_cost['count']
+    else:
+        result = Decimal(0)
 
     return result
