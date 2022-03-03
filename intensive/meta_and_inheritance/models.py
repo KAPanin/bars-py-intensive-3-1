@@ -78,9 +78,20 @@ class Worker(Person):
     startwork_date = models.DateField('Дата выхода на работу', null=True, )
     tab_num = models.IntegerField('Табельный номер', default=0)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    indexes = [
+        models.Index(
+            name='index',
+            fields=['director']
+        )
+    ]
 
     def get_status(self):
-        return f'{self.first_name} работает с {self.startwork_date}'
+        result = f'{self.first_name} работает'
+
+        if self.startwork_date is not None:
+            result += f' с {self.startwork_date}'
+
+        return result
 
     class Meta:
         db_table = 'workers'
@@ -100,6 +111,9 @@ class OrderedWorker(Worker):
         """
         Получить значение года приема на работу
         """
+        if self.startwork_date is None:
+            return None
+
         return self.startwork_date.year
 
 
@@ -107,7 +121,6 @@ class Director(Worker):
     """
     Директор
     """
-    # что здесь не хватает?
     objects = models.Manager()
     grade = models.IntegerField('Оценка', default=1)
 
