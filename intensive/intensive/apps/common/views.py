@@ -165,28 +165,32 @@ class Task4View(View):
     def get(self, request, **kwargs):
 
         authors = list(
-            UserRecipe.objects.values_list(
-                'user__email'
+            UserRecipe.objects.annotate(
+                status=Value('Автор'),
+            ).values_list(
+                'status',
+                'user__email',
             ).annotate(
                 count_recipe=Count('recipe'),
-                status=Value('Автор')
             ).order_by(
-                '-count_recipe'
-            )
-        )[:3]
+                '-count_recipe',
+            )[:3]
+        )
 
         voters = list(
             CustomUser.objects.filter(
                 author__isnull=True
-            ).values_list(
-                'email'
             ).annotate(
-                count_recipe=Count('vote__recipe'),
-                status=Value('Пользователь')
+                status=Value('Пользователь'),
+            ).values_list(
+                'status',
+                'email',
+            ).annotate(
+                count_like=Count('vote__recipe'),
             ).order_by(
-                '-count_recipe'
-            )
-        )[:3]
+                '-count_like',
+            )[:3]
+        )
 
         data = {
             'authors': authors,
@@ -225,13 +229,14 @@ class Task5View(View):
         recipe_products = list(
             RecipeProduct.objects.filter(
                 recipe=recipe_id,
+            ).annotate(
+                count_for_many=F('count') * count_portion,
             ).values_list(
                 'recipe__title',
                 'recipe__description',
                 'product__title',
+                'count_for_many',
                 'unit__abbreviation',
-            ).annotate(
-                count_for_many=F('count') * count_portion,
             )
         )
 
