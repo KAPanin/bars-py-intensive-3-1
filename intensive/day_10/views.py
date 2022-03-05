@@ -10,4 +10,18 @@ def calc(request):
 
     Результат:  JsonResponse вида {'3*3': 9, '10-2': 8, '10/5': 2}
     """
-    pass
+    result_dict = {}
+
+    if request.method == 'GET':
+
+        if 'delimiter' in request.GET:
+            delimiter = request.GET['delimiter']
+        else:
+            delimiter = ','
+
+        list_operations = request.GET['maths'].split(delimiter)
+
+        for operation in list_operations:
+            result_dict[operation] = eval(operation)
+
+    return JsonResponse(result_dict)
