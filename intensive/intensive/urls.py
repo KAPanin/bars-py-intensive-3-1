@@ -20,4 +20,6 @@ from day_10 import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('calc/', views.calc, name='calc'),
+    path('query_db/', views.query_db, name='query_bd'),
+    path('save_db/', views.save_db, name='save_db'),
 ]

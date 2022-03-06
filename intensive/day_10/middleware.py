@@ -2,6 +2,7 @@ import json
 
 from django.http import HttpResponse
 from django.http import JsonResponse
+from django.db import connection, reset_queries
 
 from django.utils.deprecation import (
     MiddlewareMixin,
@@ -48,7 +49,7 @@ class FormatterMiddleware:
 
         response = self.get_response(request)
 
-        if type(response) == JsonResponse:
+        if isinstance(response, JsonResponse):
             result_dict = json.loads(response.content)
 
             result = ''
@@ -68,3 +69,20 @@ class CheckErrorMiddleware(MiddlewareMixin):
     @staticmethod
     def process_exception(request, exception):
         return HttpResponse(f"Ошибка: {exception}")
+
+
+class LoggingSQLMiddleware:
+    """
+    Логирование SQL запросов
+    """
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+
+        response = self.get_response(request)
+
+        for query in connection.queries:
+            print('SQL запрос:', query['sql'], '\n', sep=' ')
+
+        return response

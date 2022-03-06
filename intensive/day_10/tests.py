@@ -26,3 +26,8 @@ class MiddlewareTestCase(TestCase):
         content = response.content.decode().split(':')[0]
 
         self.assertEqual(content, 'Ошибка')
+
+    def test_query_db(self):
+        response = self.client.get('/query_db/?name=Олег&begin=2021.1.1&end=2021.1.31')
+        content = response.content.decode()
+        self.assertEqual(content, "<p>top_customer = ['Иван', 2]</p><p>order_count = 2</p>")
